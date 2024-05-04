@@ -1,0 +1,45 @@
+# Build directories
+bin/
+obj/
+
+# Rider project files
+.idea/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.pid
+*.bak
+
+# Package management files
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# Automatically generated files
+*.dll
+*.exe
+*.pdb
+*.vscode
+
+# Local machine data
+local.settings.json
+appsettings.Development.json
+secrets.json
+
+# Kestrel server files
+.kestrel
+
+# Tools and build files
+.vs/
+.nuget/
+.vscode/
