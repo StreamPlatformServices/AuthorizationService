@@ -34,10 +34,10 @@ namespace AuthorizationService.Service
             string secret;
 
             // For development
-            // secret = _jwtOptions.Secret;
+            secret = _jwtOptions.Secret;
 
             // For production
-            secret = GenerateSecureSecret();
+            // secret = GenerateSecureSecret();
 
             byte[] key = Encoding.ASCII.GetBytes(secret);
 

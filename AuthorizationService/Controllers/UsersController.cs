@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AuthorizationService.Models.Dto;
 using AuthorizationService.Service.IService;
+using AuthorizationService.Entity;
+using AuthorizationService.Models;
 
 namespace AuthorizationService.Controllers
 {
@@ -34,10 +36,38 @@ namespace AuthorizationService.Controllers
             return Ok(_response);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateUserRequestDto user)
+        {
+            var errorMessage = await _userService.Update(id, user);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
+
+        }
+
         [HttpPost("assign-role/{id}")]
         public async Task<IActionResult> AssignRole(string id, [FromQuery] string roles)
         {
             var errorMessage = await _userService.AssignRole(id, roles.ToUpper());
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
+
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var errorMessage = await _userService.Delete(id);
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 _response.IsSuccess = false;

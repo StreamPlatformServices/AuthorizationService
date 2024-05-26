@@ -4,14 +4,14 @@ using AuthorizationService.Service.IService;
 
 namespace AuthorizationService.Controllers
 {
-    [Route("api/auth")]
+    [Route("api")]
     [ApiController]
-    public class AuthAPIController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
         private readonly IConfiguration _configuration;
         protected ResponseDto _response;
-        public AuthAPIController(IAuthService authService, IConfiguration configuration)
+        public AuthController(IAuthService authService, IConfiguration configuration)
         {
             _authService = authService;
             _configuration = configuration;

@@ -24,7 +24,7 @@ namespace AuthorizationService.Service
 
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
-            var user = _userManager.Users.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDto.UserName.ToLower());
+            var user = _userManager.Users.FirstOrDefault(u => u.Email.ToLower() == loginRequestDto.Email.ToLower());
 
             bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
 
