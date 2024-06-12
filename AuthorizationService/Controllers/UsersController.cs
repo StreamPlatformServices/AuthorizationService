@@ -3,6 +3,7 @@ using AuthorizationService.Models.Dto;
 using AuthorizationService.Service.IService;
 using AuthorizationService.Entity;
 using AuthorizationService.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthorizationService.Controllers
 {
@@ -21,6 +22,7 @@ namespace AuthorizationService.Controllers
             _response = new ResponseDto();
         }
 
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UsersResponseDto))]
         public async Task<ActionResult> GetUsersWithRoles()

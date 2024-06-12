@@ -3,6 +3,7 @@ using AuthorizationService.Models.Dto;
 using AuthorizationService.Models;
 using AuthorizationService.Service.IService;
 using AuthorizationService.Data;
+using System.Security.Cryptography;
 
 namespace AuthorizationService.Service
 {
@@ -90,9 +91,13 @@ namespace AuthorizationService.Service
             }
             catch (Exception ex)
             {
-
+                return $"Error Encountered {ex.Message}";
             }
-            return "Error Encountered";
+        }
+
+        public string GetPublicKey()
+        {
+            return _jwtTokenGenerator.GetPublicKey();
         }
     }
 }

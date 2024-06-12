@@ -48,5 +48,20 @@ namespace AuthorizationService.Controllers
             return Ok(_response);
 
         }
+
+        [HttpGet("publickey")]
+        public IActionResult GetTokenPublicKey()
+        {
+            var jwtPublicKey = _authService.GetPublicKey();
+            if (string.IsNullOrEmpty(jwtPublicKey))
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Creation of token failed";
+                return StatusCode(500, _response);
+            }
+            _response.Result = jwtPublicKey;
+            return Ok(_response);
+
+        }
     }
 }

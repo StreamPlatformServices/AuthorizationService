@@ -52,7 +52,10 @@ builder.Services.AddAuthentication(x =>
     x.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
+        IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
+        {
+            return new[] { JwtTokenGenerator.GetRsaSecurityKey() };
+        },
         ValidateIssuer = true,
         ValidIssuer = issuer,
         ValidAudience = audience,
@@ -72,7 +75,7 @@ builder.Services.AddAuthorization();
         };
     });
 */
-builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
