@@ -1,0 +1,26 @@
+[
+  {
+    "username": "user",
+    "email": "user@user",
+    "nip": "",
+    "phoneNumber": "",
+    "isActive": true,
+    "role": "EndUser"
+  },
+  {
+    "username": "content",
+    "email": "content@content",
+    "nip": "",
+    "phoneNumber": "123456789",
+    "isActive": false,
+    "role": "ContentCreator"
+  },
+  {
+    "username": "admin",
+    "email": "admin@admin",
+    "nip": "",
+    "phoneNumber": "",
+    "isActive": true,
+    "role": "Admin"
+  }
+]

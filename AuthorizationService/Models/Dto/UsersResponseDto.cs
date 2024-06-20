@@ -1,7 +1,8 @@
-﻿namespace AuthorizationService.Models.Dto
+﻿
+namespace AuthorizationService.Models.Dto
 {
     public class UsersResponseDto
     {
-        public List<UserWithRolesDto> Users { get; set; }
+        public List<UserDto> Users { get; set; }
     }
 }

@@ -1,29 +1,58 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AuthorizationService.Models.Dto;
 using AuthorizationService.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthorizationService.Controllers
 {
-    [Route("api")]
+    [Route("auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly IConfiguration _configuration;
         protected ResponseDto _response;
-        public AuthController(IAuthService authService, IConfiguration configuration)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _configuration = configuration;
             _response = new();
         }
 
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegistrationRequestDto model)
+        [HttpPost("registerEndUser")]
+        public async Task<IActionResult> RegisterEndUser([FromBody] BaseRegistrationRequestDto model)
         {
 
-            var errorMessage = await _authService.Register(model);
+            var errorMessage = await _authService.RegisterEndUser(model);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
+            }
+
+            return Ok(_response);
+        }
+
+        [HttpPost("registerContentCreator")]
+        public async Task<IActionResult> RegisterContentCreator([FromBody] RegistrationContentCreatorRequestDto model)
+        {
+
+            var errorMessage = await _authService.RegisterContentCreator(model);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
+            }
+
+            return Ok(_response);
+        }
+
+/*        [Authorize(Policy = "RequireAdminRole")]*/ // TODO: Uncomment
+        [HttpPost("registerAdminUser")]
+        public async Task<IActionResult> RegisterAdminUser([FromBody] BaseRegistrationRequestDto model)
+        {
+
+            var errorMessage = await _authService.RegisterAdminUser(model);
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 _response.IsSuccess = false;
@@ -38,15 +67,15 @@ namespace AuthorizationService.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequestDto model)
         {
             var loginResponse = await _authService.Login(model);
-            if (loginResponse.User == null)
+            if (loginResponse == null)
             {
                 _response.IsSuccess = false;
-                _response.Message = "Username or password is incorrect";
+                _response.Message = "Nieprawidłowy login lub hasło.";
                 return BadRequest(_response);
             }
             _response.Result = loginResponse;
+            
             return Ok(_response);
-
         }
 
         [HttpGet("publickey")]

@@ -4,8 +4,12 @@ namespace AuthorizationService.Service.IService
 {
     public interface IAuthService
     {
-        Task<string> Register(RegistrationRequestDto registrationRequestDto);
+        Task<string> RegisterEndUser(BaseRegistrationRequestDto registrationRequestDto);
+        Task<string> RegisterContentCreator(RegistrationContentCreatorRequestDto registrationRequestDto);
+        Task<string> RegisterAdminUser(BaseRegistrationRequestDto registrationRequestDto);
+
         Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto);
+
         string GetPublicKey();
     }
 }

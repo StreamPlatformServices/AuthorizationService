@@ -2,17 +2,11 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using AuthorizationService.Models;
+using AuthorizationService.Entity;
 
 namespace AuthorizationService.Data
 {
-    public class DataContext: IdentityDbContext<ApplicationUser, 
-        AppRole, 
-        string, 
-        IdentityUserClaim<string>, 
-        AppUserRole, 
-        IdentityUserLogin<string>,
-        IdentityRoleClaim<string>,
-        IdentityUserToken<string>>
+    public class DataContext: IdentityDbContext<AppUser>
     {
         public DataContext(DbContextOptions options) : base(options) { }
 
@@ -20,19 +14,24 @@ namespace AuthorizationService.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<ApplicationUser>()
-                .HasMany(userRoles => userRoles.UserRoles)
-                .WithOne(user => user.User)
-                .HasForeignKey(u => u.UserId)
-                .IsRequired();
+            builder.Entity<AppUser>().Ignore(e => e.AccessFailedCount);
+            builder.Entity<AppUser>().Ignore(e => e.EmailConfirmed);
+            builder.Entity<AppUser>().Ignore(e => e.LockoutEnabled);
+            builder.Entity<AppUser>().Ignore(e => e.LockoutEnd);
+            builder.Entity<AppUser>().Ignore(e => e.PhoneNumberConfirmed);
+            builder.Entity<AppUser>().Ignore(e => e.SecurityStamp);
+            builder.Entity<AppUser>().Ignore(e => e.TwoFactorEnabled);
+            builder.Entity<AppUser>().Ignore(e => e.UserRoleEnum);
 
-            builder.Entity<AppRole>()
-                .HasMany(userRoles => userRoles.UserRoles)
-                .WithOne(user => user.Role)
-                .HasForeignKey(u => u.RoleId)
-                .IsRequired();
+            builder.Ignore<IdentityUserClaim<string>>();
+            builder.Ignore<IdentityUserLogin<string>>();
+            builder.Ignore<IdentityUserToken<string>>();
+            builder.Ignore<IdentityRoleClaim<string>>();
+            builder.Ignore<IdentityUserRole<string>>();
+            builder.Ignore<IdentityRole>();
+            builder.Entity<AppUser>().ToTable("Users");
         }
 
-            public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<AppUser> ApplicationUsers { get; set; }
         }
 }

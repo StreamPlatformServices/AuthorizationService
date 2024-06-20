@@ -5,7 +5,7 @@ using AuthorizationService.Service.IService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
+using AuthorizationService.Entity;
 
 namespace AuthorizationService.Service
 {
@@ -28,7 +28,7 @@ namespace AuthorizationService.Service
             }
         }
 
-        public string GenerateToken(ApplicationUser applicationUser, IEnumerable<string> roles)
+        public string GenerateToken(AppUser applicationUser, UserRole role)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -45,12 +45,11 @@ namespace AuthorizationService.Service
 
             var claimList = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Email,applicationUser.Email),
                 new Claim(JwtRegisteredClaimNames.Sub,applicationUser.Id),
-                new Claim(JwtRegisteredClaimNames.Name,applicationUser.UserName)
+                new Claim(JwtRegisteredClaimNames.Name,applicationUser.UserName),
+                new Claim(ClaimTypes.Role, role.ToString())
             };
 
-            claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
