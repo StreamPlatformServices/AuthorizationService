@@ -1,100 +1,99 @@
-﻿using Microsoft.AspNetCore.Mvc;
 using AuthorizationService.Models.Dto;
 using AuthorizationService.Service.IService;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace AuthorizationService.Controllers
+namespace AuthorizationService.Controllers;
+
+[Route("users")]
+[Authorize]
+[ApiController]
+public class UsersController : ControllerBase
 {
-    [Route("users")]
-    [Authorize]
-    [ApiController]
-    public class UsersController: ControllerBase
+    private readonly IUserService _userService;
+    protected ResponseDto _response;
+
+    public UsersController(IUserService userService)
     {
-        private readonly IUserService _userService;
-        protected ResponseDto _response;
+        _userService = userService;
+        _response = new ResponseDto();
+    }
 
-        public UsersController(IUserService userService)
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UsersResponseDto))]
+    public async Task<ActionResult> GetUsers()
+    {
+        var usersResponse = await _userService.GetUsers();
+        if (usersResponse.Users == null)
         {
-            _userService = userService;
-            _response = new ResponseDto();
+            _response.IsSuccess = false;
+            _response.Message = "Nie udało się pobrać użytkowników."; ;
+            return BadRequest(_response);
         }
+        _response.Result = usersResponse;
 
-        [Authorize(Policy = "RequireAdminRole")]
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UsersResponseDto))]
-        public async Task<ActionResult> GetUsers()
+        return Ok(_response);
+    }
+
+    [HttpGet("user")]
+    public async Task<ActionResult> GetUser()
+    {
+        var userResponse = await _userService.GetUser(User);
+        if (userResponse == null)
         {
-            var usersResponse = await _userService.GetUsers();
-            if (usersResponse.Users == null)
-            {
-                _response.IsSuccess = false;
-                _response.Message = "Nie udało się pobrać użytkowników."; ;
-                return BadRequest(_response);
-            }
-            _response.Result = usersResponse;
-
-            return Ok(_response);
+            _response.IsSuccess = false;
+            _response.Message = "Nie udało się pobrać danych użytkownika.";
+            return BadRequest(_response);
         }
+        _response.Result = userResponse;
 
-        [HttpGet("getUser")]
-        public async Task<ActionResult> GetUser()
+        return Ok(_response);
+    }
+
+
+    [Authorize(Policy = "RequireEndUserRole")]
+    [HttpPut("end-user")]
+    public async Task<IActionResult> UpdateEndUser([FromBody] BaseUpdateUserRequestDto user)
+    {
+
+        var errorMessage = await _userService.UpdateEndUser(user, User);
+        if (!string.IsNullOrEmpty(errorMessage))
         {
-            var userResponse = await _userService.GetUser(User);
-            if (userResponse == null)
-            {
-                _response.IsSuccess = false;
-                _response.Message = "Nie udało się pobrać danych użytkownika.";
-                return BadRequest(_response);
-            }
-            _response.Result = userResponse;
-
-            return Ok(_response);
+            _response.IsSuccess = false;
+            _response.Message = errorMessage;
+            return BadRequest(_response);
         }
+        return Ok(_response);
 
+    }
 
-        [Authorize(Policy = "RequireEndUserRole")]
-        [HttpPut("updateEndUser")]
-        public async Task<IActionResult> UpdateEndUser([FromBody] BaseUpdateUserRequestDto user)
+    [Authorize(Policy = "RequireContentCreatorRole")]
+    [HttpPut("content-creator")]
+    public async Task<IActionResult> UpdateContentCreator([FromBody] UpdateContentCreatorRequestDto user)
+    {
+
+        var errorMessage = await _userService.UpdateContentCreator(user, User);
+        if (!string.IsNullOrEmpty(errorMessage))
         {
-
-            var errorMessage = await _userService.UpdateEndUser(user, User);
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                _response.IsSuccess = false;
-                _response.Message = errorMessage;
-                return BadRequest(_response);
-            }
-            return Ok(_response);
-
+            _response.IsSuccess = false;
+            _response.Message = errorMessage;
+            return BadRequest(_response);
         }
+        return Ok(_response);
+    }
 
-        [Authorize(Policy = "RequireContentCreatorRole")]
-        [HttpPut("updateContentCreator")]
-        public async Task<IActionResult> UpdateContentCreator([FromBody] UpdateContentCreatorRequestDto user)
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpPost("{username}/status")]
+    public async Task<ActionResult> UpdateStatus(string username)
+    {
+        var errorMessage = await _userService.UpdateStatus(username);
+        if (!string.IsNullOrEmpty(errorMessage))
         {
-
-            var errorMessage = await _userService.UpdateContentCreator(user, User);
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                _response.IsSuccess = false;
-                _response.Message = errorMessage;
-                return BadRequest(_response);
-            }
-            return Ok(_response);
+            _response.IsSuccess = false;
+            _response.Message = errorMessage;
+            return BadRequest(_response);
         }
-
-        [Authorize(Policy = "RequireAdminRole")]
-        [HttpPost("{username}/status")]
-        public async Task<ActionResult> UpdateStatus(string username)
-        {
-            var errorMessage = await _userService.UpdateStatus(username);
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                _response.IsSuccess = false;
-                _response.Message = errorMessage;
-                return BadRequest(_response);
-            }
-            return Ok(_response);
-        }
+        return Ok(_response);
     }
 }

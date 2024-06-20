@@ -1,26 +1,24 @@
-﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace AuthorizationService.Extensions
+namespace AuthorizationService.Extensions;
+public static class SwaggerServiceExtensions
 {
-    public static class SwaggerServiceExtensions
+    public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
     {
-        public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
+        services.AddSwaggerGen(c =>
         {
-            services.AddSwaggerGen(c =>
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+                In = ParameterLocation.Header,
+                Description = "Proszę podać JWT token używając formatu 'Bearer {token}'",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey
+            });
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Description = "Proszę podać JWT token używając formatu 'Bearer {token}'",
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
                     {
                         new OpenApiSecurityScheme
                         {
@@ -32,10 +30,9 @@ namespace AuthorizationService.Extensions
                         },
                         new string[] {}
                     }
-                });
             });
+        });
 
-            return services;
-        }
+        return services;
     }
 }

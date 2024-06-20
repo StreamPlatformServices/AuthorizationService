@@ -1,22 +1,19 @@
-﻿namespace AuthorizationService.Extensions
+namespace AuthorizationService.Extensions;
+public static class CorsServiceExtension
 {
-    public static class CorsServiceExtension
+    public static IServiceCollection AddCorsServices(this IServiceCollection services)
     {
-        public static IServiceCollection AddCorsServices(this IServiceCollection services)
+
+        services.AddCors(options =>
         {
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    policy =>
-                    {
-                        policy.AllowAnyOrigin()
-                              .AllowAnyHeader()
-                              .AllowAnyMethod();
-                    });
-            });
-            return services;
-        }
-
+            options.AddPolicy("AllowAll",
+                policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+        });
+        return services;
     }
 }

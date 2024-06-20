@@ -1,9 +1,7 @@
-﻿namespace AuthorizationService.Models.Dto
+namespace AuthorizationService.Models.Dto;
+public class UpdateContentCreatorRequestDto : BaseUpdateUserRequestDto
 {
-    public class UpdateContentCreatorRequestDto : BaseUpdateUserRequestDto
-    {
-        public int? NIP { get; set; }
-        public int? PhoneNumber { get; set; }
+    public string? NIP { get; set; }
+    public string? PhoneNumber { get; set; }
 
-    }
 }

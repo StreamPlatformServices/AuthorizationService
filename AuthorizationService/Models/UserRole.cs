@@ -1,9 +1,9 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace AuthorizationService.Models;
-    public enum UserRole
-    {
+public enum UserRole
+{
 
     [Description("Admin")]
     [EnumMember(Value = "Admin")]

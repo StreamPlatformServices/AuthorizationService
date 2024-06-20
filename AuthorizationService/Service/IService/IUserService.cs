@@ -1,15 +1,13 @@
-﻿using AuthorizationService.Models.Dto;
 using System.Security.Claims;
+using AuthorizationService.Models.Dto;
 
-namespace AuthorizationService.Service.IService
+namespace AuthorizationService.Service.IService;
+public interface IUserService
 {
-    public interface IUserService
-    {
-        Task<UsersResponseDto> GetUsers();
-        Task<UserResponseDto> GetUser(ClaimsPrincipal userPrincipal);
+    Task<UsersResponseDto> GetUsers();
+    Task<UserResponseDto> GetUser(ClaimsPrincipal userPrincipal);
 
-        Task<string> UpdateEndUser(BaseUpdateUserRequestDto user, ClaimsPrincipal userPrincipal);
-        Task<string> UpdateContentCreator(UpdateContentCreatorRequestDto user, ClaimsPrincipal userPrincipal);
-        Task<string> UpdateStatus(string username);
-    }
+    Task<string> UpdateEndUser(BaseUpdateUserRequestDto user, ClaimsPrincipal userPrincipal);
+    Task<string> UpdateContentCreator(UpdateContentCreatorRequestDto user, ClaimsPrincipal userPrincipal);
+    Task<string> UpdateStatus(string username);
 }

@@ -29,7 +29,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddCorsServices();
 builder.Services.AddSwaggerDocumentation();
-/*builder.Services.AddControllers().AddNewtonsoftJson();*/
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 var app = builder.Build();
 

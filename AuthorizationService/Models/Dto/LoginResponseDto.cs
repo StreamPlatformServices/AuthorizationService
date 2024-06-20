@@ -1,7 +1,5 @@
-﻿namespace AuthorizationService.Models.Dto
+namespace AuthorizationService.Models.Dto;
+public class LoginResponseDto
 {
-    public class LoginResponseDto
-    {
-        public string Token { get; set; }
-    }
+    public string Token { get; set; }
 }

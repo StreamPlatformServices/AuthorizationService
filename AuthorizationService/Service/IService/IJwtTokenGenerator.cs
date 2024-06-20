@@ -1,12 +1,10 @@
-﻿using AuthorizationService.Entity;
+using AuthorizationService.Entity;
 using AuthorizationService.Models;
 
-namespace AuthorizationService.Service.IService
+namespace AuthorizationService.Service.IService;
+public interface IJwtTokenGenerator
 {
-    public interface IJwtTokenGenerator
-    {
-        string GenerateToken(AppUser applicationUser, UserRole role);
+    string GenerateToken(AppUser applicationUser, UserRole role);
 
-        string GetPublicKey();
-    }
+    string GetPublicKey();
 }
