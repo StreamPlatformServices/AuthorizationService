@@ -12,7 +12,6 @@ namespace AuthorizationService.Service;
 public class UserService : IUserService
 {
     private readonly UserManager<AppUser> _userManager;
-
     public UserService(UserManager<AppUser> userManager)
     {
         _userManager = userManager;
@@ -130,7 +129,7 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<string> RemoveUser(ClaimsPrincipal userPrincipal)
+    public async Task<string> RemoveUser(string password, ClaimsPrincipal userPrincipal)
     {
         var user = await validateUser(userPrincipal);
 
@@ -139,6 +138,12 @@ public class UserService : IUserService
             return null;
         }
 
+        var isCorrectPassword = await _userManager.CheckPasswordAsync(user, password);
+
+        if (!isCorrectPassword)
+        {
+            return "Nieprawidłowe hasło.";
+        }
 
         var result = await _userManager.DeleteAsync(user);
 

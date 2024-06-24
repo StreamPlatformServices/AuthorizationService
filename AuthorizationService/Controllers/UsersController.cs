@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace AuthorizationService.Controllers;
 
 [Route("users")]
-[Authorize]
 [ApiController]
 public class UsersController : ControllerBase
 {
@@ -50,6 +49,7 @@ public class UsersController : ControllerBase
     }
 
     /*        [Authorize(Policy = "RequireAdminRole")]*/ // TODO: Uncomment
+    [Authorize]
     [HttpPost("admin-user")]
     public async Task<IActionResult> RegisterAdminUser([FromBody] BaseRegistrationRequestDto model)
     {
@@ -82,6 +82,7 @@ public class UsersController : ControllerBase
         return Ok(_response);
     }
 
+    [Authorize]
     [HttpGet("user")]
     public async Task<ActionResult> GetUser()
     {
@@ -97,10 +98,12 @@ public class UsersController : ControllerBase
         return Ok(_response);
     }
 
-    [HttpDelete("user")]
-    public async Task<ActionResult> RemoveUser()
+    [Authorize]
+    [HttpDelete()]
+    public async Task<ActionResult> RemoveUser([FromBody] DeleteAccountRequestDto passwordDto)
     {
-        var errorMessage = await _userService.RemoveUser(User);
+
+        var errorMessage = await _userService.RemoveUser(passwordDto.Password, User);
         if (!string.IsNullOrEmpty(errorMessage))
         {
             _response.IsSuccess = false;

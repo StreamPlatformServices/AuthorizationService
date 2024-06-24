@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
         if (loginResponse == null)
         {
             _response.IsSuccess = false;
-            _response.Message = "Nieprawidłowy login lub hasło.";
+            _response.Message = "Nieprawidłowe dane logowania lub nieaktywne konto.";
             return BadRequest(_response);
         }
         _response.Result = loginResponse;

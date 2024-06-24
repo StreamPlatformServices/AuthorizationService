@@ -6,7 +6,7 @@ public interface IUserService
 {
     Task<UsersResponseDto> GetUsers();
     Task<UserResponseDto> GetUser(ClaimsPrincipal userPrincipal);
-    Task<string> RemoveUser(ClaimsPrincipal userPrincipal);
+    Task<string> RemoveUser(string password, ClaimsPrincipal userPrincipal);
     Task<string> RegisterEndUser(BaseRegistrationRequestDto registrationRequestDto);
     Task<string> RegisterContentCreator(RegistrationContentCreatorRequestDto registrationRequestDto);
     Task<string> RegisterAdminUser(BaseRegistrationRequestDto registrationRequestDto);

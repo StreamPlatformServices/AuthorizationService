@@ -21,7 +21,6 @@ builder.Services
 
 builder.Services.AddAuthenticationServices(settingsSection);
 builder.Services.AddAuthorizationServices();
-
 builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
