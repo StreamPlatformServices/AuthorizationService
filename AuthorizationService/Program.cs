@@ -1,11 +1,11 @@
-using Microsoft.EntityFrameworkCore;
 using AuthorizationService.Data;
-using AuthorizationService.Service.IService;
-using AuthorizationService.Service;
-using Microsoft.AspNetCore.Identity;
-using AuthorizationService.Models;
 using AuthorizationService.Entity;
 using AuthorizationService.Extensions;
+using AuthorizationService.Models;
+using AuthorizationService.Service;
+using AuthorizationService.Service.IService;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var settingsSection = builder.Configuration.GetSection("ApiSettings:JwtOptions");
@@ -35,7 +35,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-/*    app.UseCors("AllowAll");*/ // TODO: Check if it's needed
+    app.UseCors("AllowAll");
     app.UseSwagger();
     app.UseSwaggerUI();
 }

@@ -6,8 +6,12 @@ public interface IUserService
 {
     Task<UsersResponseDto> GetUsers();
     Task<UserResponseDto> GetUser(ClaimsPrincipal userPrincipal);
-
+    Task<string> RemoveUser(ClaimsPrincipal userPrincipal);
+    Task<string> RegisterEndUser(BaseRegistrationRequestDto registrationRequestDto);
+    Task<string> RegisterContentCreator(RegistrationContentCreatorRequestDto registrationRequestDto);
+    Task<string> RegisterAdminUser(BaseRegistrationRequestDto registrationRequestDto);
     Task<string> UpdateEndUser(BaseUpdateUserRequestDto user, ClaimsPrincipal userPrincipal);
     Task<string> UpdateContentCreator(UpdateContentCreatorRequestDto user, ClaimsPrincipal userPrincipal);
+    Task<string> UpdateAdmin(BaseUpdateUserRequestDto user, ClaimsPrincipal userPrincipal);
     Task<string> UpdateStatus(string username);
 }

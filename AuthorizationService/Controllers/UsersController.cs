@@ -19,6 +19,52 @@ public class UsersController : ControllerBase
         _response = new ResponseDto();
     }
 
+    [HttpPost("end-user")]
+    public async Task<IActionResult> RegisterEndUser([FromBody] BaseRegistrationRequestDto model)
+    {
+
+        var errorMessage = await _userService.RegisterEndUser(model);
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            _response.IsSuccess = false;
+            _response.Message = errorMessage;
+            return BadRequest(_response);
+        }
+
+        return Ok(_response);
+    }
+
+    [HttpPost("content-creator")]
+    public async Task<IActionResult> RegisterContentCreator([FromBody] RegistrationContentCreatorRequestDto model)
+    {
+
+        var errorMessage = await _userService.RegisterContentCreator(model);
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            _response.IsSuccess = false;
+            _response.Message = errorMessage;
+            return BadRequest(_response);
+        }
+
+        return Ok(_response);
+    }
+
+    /*        [Authorize(Policy = "RequireAdminRole")]*/ // TODO: Uncomment
+    [HttpPost("admin-user")]
+    public async Task<IActionResult> RegisterAdminUser([FromBody] BaseRegistrationRequestDto model)
+    {
+
+        var errorMessage = await _userService.RegisterAdminUser(model);
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            _response.IsSuccess = false;
+            _response.Message = errorMessage;
+            return BadRequest(_response);
+        }
+
+        return Ok(_response);
+    }
+
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UsersResponseDto))]
@@ -51,6 +97,19 @@ public class UsersController : ControllerBase
         return Ok(_response);
     }
 
+    [HttpDelete("user")]
+    public async Task<ActionResult> RemoveUser()
+    {
+        var errorMessage = await _userService.RemoveUser(User);
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            _response.IsSuccess = false;
+            _response.Message = errorMessage;
+            return BadRequest(_response);
+        }
+
+        return Ok(_response);
+    }
 
     [Authorize(Policy = "RequireEndUserRole")]
     [HttpPut("end-user")]
@@ -74,6 +133,21 @@ public class UsersController : ControllerBase
     {
 
         var errorMessage = await _userService.UpdateContentCreator(user, User);
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            _response.IsSuccess = false;
+            _response.Message = errorMessage;
+            return BadRequest(_response);
+        }
+        return Ok(_response);
+    }
+
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpPut("admin")]
+    public async Task<IActionResult> UpdateAdmin([FromBody] BaseUpdateUserRequestDto user)
+    {
+
+        var errorMessage = await _userService.UpdateAdmin(user, User);
         if (!string.IsNullOrEmpty(errorMessage))
         {
             _response.IsSuccess = false;

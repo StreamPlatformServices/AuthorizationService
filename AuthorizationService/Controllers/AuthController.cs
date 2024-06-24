@@ -15,52 +15,6 @@ public class AuthController : ControllerBase
         _response = new();
     }
 
-    [HttpPost("end-user")]
-    public async Task<IActionResult> RegisterEndUser([FromBody] BaseRegistrationRequestDto model)
-    {
-
-        var errorMessage = await _authService.RegisterEndUser(model);
-        if (!string.IsNullOrEmpty(errorMessage))
-        {
-            _response.IsSuccess = false;
-            _response.Message = errorMessage;
-            return BadRequest(_response);
-        }
-
-        return Ok(_response);
-    }
-
-    [HttpPost("content-creator")]
-    public async Task<IActionResult> RegisterContentCreator([FromBody] RegistrationContentCreatorRequestDto model)
-    {
-
-        var errorMessage = await _authService.RegisterContentCreator(model);
-        if (!string.IsNullOrEmpty(errorMessage))
-        {
-            _response.IsSuccess = false;
-            _response.Message = errorMessage;
-            return BadRequest(_response);
-        }
-
-        return Ok(_response);
-    }
-
-    /*        [Authorize(Policy = "RequireAdminRole")]*/ // TODO: Uncomment
-    [HttpPost("admin-user")]
-    public async Task<IActionResult> RegisterAdminUser([FromBody] BaseRegistrationRequestDto model)
-    {
-
-        var errorMessage = await _authService.RegisterAdminUser(model);
-        if (!string.IsNullOrEmpty(errorMessage))
-        {
-            _response.IsSuccess = false;
-            _response.Message = errorMessage;
-            return BadRequest(_response);
-        }
-
-        return Ok(_response);
-    }
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto model)
     {
