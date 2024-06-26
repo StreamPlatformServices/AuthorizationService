@@ -155,7 +155,7 @@ public class UserService : IUserService
         return "Nie udało się usunąć użytkownika.";
     }
 
-    public async Task<string> UpdateStatus(string username)
+    public async Task<string> UpdateStatus(UpdateUserStatusRequestDto userStatus, string username)
     {
         var user = await _userManager.FindByNameAsync(username);
 
@@ -164,7 +164,7 @@ public class UserService : IUserService
             return "Użytkownik nie został znaleziony.";
         }
 
-        user.IsActive = !user.IsActive;
+        user.IsActive = userStatus.isActive;
 
         await _userManager.UpdateAsync(user);
 

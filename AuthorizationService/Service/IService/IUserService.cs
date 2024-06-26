@@ -13,5 +13,5 @@ public interface IUserService
     Task<string> UpdateEndUser(BaseUpdateUserRequestDto user, ClaimsPrincipal userPrincipal);
     Task<string> UpdateContentCreator(UpdateContentCreatorRequestDto user, ClaimsPrincipal userPrincipal);
     Task<string> UpdateAdmin(BaseUpdateUserRequestDto user, ClaimsPrincipal userPrincipal);
-    Task<string> UpdateStatus(string username);
+    Task<string> UpdateStatus(UpdateUserStatusRequestDto isActive, string username);
 }

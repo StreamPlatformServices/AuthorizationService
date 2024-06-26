@@ -161,10 +161,10 @@ public class UsersController : ControllerBase
     }
 
     [Authorize(Policy = "RequireAdminRole")]
-    [HttpPost("{username}/status")]
-    public async Task<ActionResult> UpdateStatus(string username)
+    [HttpPatch("{username}/status")]
+    public async Task<ActionResult> UpdateStatus([FromBody] UpdateUserStatusRequestDto isActive, string username)
     {
-        var errorMessage = await _userService.UpdateStatus(username);
+        var errorMessage = await _userService.UpdateStatus(isActive, username);
         if (!string.IsNullOrEmpty(errorMessage))
         {
             _response.IsSuccess = false;
