@@ -49,7 +49,7 @@ public class UsersController : ControllerBase
     }
 
     /*        [Authorize(Policy = "RequireAdminRole")]*/ // TODO: Uncomment
-    [Authorize]
+    /*  [Authorize]*/
     [HttpPost("admin-user")]
     public async Task<IActionResult> RegisterAdminUser([FromBody] BaseRegistrationRequestDto model)
     {
