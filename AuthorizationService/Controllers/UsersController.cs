@@ -86,91 +86,141 @@ public class UsersController : ControllerBase
     [HttpGet("user")]
     public async Task<ActionResult> GetUser()
     {
-        var userResponse = await _userService.GetUser(User);
-        if (userResponse == null)
+        try
+        {
+            var userResponse = await _userService.GetUser(User);
+            if (userResponse == null)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Nie udało się pobrać danych użytkownika.";
+                return BadRequest(_response);
+            }
+            _response.Result = userResponse;
+
+            return Ok(_response);
+        }
+        catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = "Nie udało się pobrać danych użytkownika.";
-            return BadRequest(_response);
+            _response.Message = "Wystąpił błąd podczas pobierania danych użytkownika.";
+            return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
-        _response.Result = userResponse;
-
-        return Ok(_response);
     }
 
-    [Authorize]
-    [HttpDelete()]
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpDelete]
     public async Task<ActionResult> RemoveUser([FromBody] DeleteAccountRequestDto passwordDto)
     {
+        try
+        {
+            var errorMessage = await _userService.RemoveUser(passwordDto.Password, User);
 
-        var errorMessage = await _userService.RemoveUser(passwordDto.Password, User);
-        if (!string.IsNullOrEmpty(errorMessage))
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
+            }
+
+            return Ok(_response);
+        }
+        catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = errorMessage;
-            return BadRequest(_response);
+            _response.Message = "Wystąpił błąd podczas usuwania konta użytkownika.";
+            return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
-
-        return Ok(_response);
     }
 
     [Authorize(Policy = "RequireEndUserRole")]
     [HttpPut("end-user")]
     public async Task<IActionResult> UpdateEndUser([FromBody] BaseUpdateUserRequestDto user)
     {
-
-        var errorMessage = await _userService.UpdateEndUser(user, User);
-        if (!string.IsNullOrEmpty(errorMessage))
+        try
+        {
+            var errorMessage = await _userService.UpdateEndUser(user, User);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
+        }
+        catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = errorMessage;
-            return BadRequest(_response);
+            _response.Message = "Wystąpił błąd podczas aktualizacji danych użytkownika.";
+            return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
-        return Ok(_response);
-
     }
 
     [Authorize(Policy = "RequireContentCreatorRole")]
     [HttpPut("content-creator")]
     public async Task<IActionResult> UpdateContentCreator([FromBody] UpdateContentCreatorRequestDto user)
     {
-
-        var errorMessage = await _userService.UpdateContentCreator(user, User);
-        if (!string.IsNullOrEmpty(errorMessage))
+        try
+        {
+            var errorMessage = await _userService.UpdateContentCreator(user, User);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
+        }
+        catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = errorMessage;
-            return BadRequest(_response);
+            _response.Message = "Wystąpił błąd podczas aktualizacji danych użytkownika.";
+            return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
-        return Ok(_response);
     }
 
     [Authorize(Policy = "RequireAdminRole")]
     [HttpPut("admin")]
     public async Task<IActionResult> UpdateAdmin([FromBody] BaseUpdateUserRequestDto user)
     {
-
-        var errorMessage = await _userService.UpdateAdmin(user, User);
-        if (!string.IsNullOrEmpty(errorMessage))
+        try
+        {
+            var errorMessage = await _userService.UpdateAdmin(user, User);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
+        }
+        catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = errorMessage;
-            return BadRequest(_response);
+            _response.Message = "Wystąpił błąd podczas aktualizacji danych użytkownika.";
+            return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
-        return Ok(_response);
     }
 
     [Authorize(Policy = "RequireAdminRole")]
     [HttpPatch("{username}/status")]
     public async Task<ActionResult> UpdateStatus([FromBody] UpdateUserStatusRequestDto isActive, string username)
     {
-        var errorMessage = await _userService.UpdateStatus(isActive, username);
-        if (!string.IsNullOrEmpty(errorMessage))
+        try
+        {
+            var errorMessage = await _userService.UpdateStatus(isActive, username);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
+        }
+        catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = errorMessage;
-            return BadRequest(_response);
+            _response.Message = "Wystąpił błąd podczas aktualizacji statusu użytkownika.";
+            return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
-        return Ok(_response);
     }
 }

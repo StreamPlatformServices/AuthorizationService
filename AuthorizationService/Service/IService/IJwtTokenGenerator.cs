@@ -1,4 +1,3 @@
-using AuthorizationService.Entity;
 using AuthorizationService.Models;
 
 namespace AuthorizationService.Service.IService;

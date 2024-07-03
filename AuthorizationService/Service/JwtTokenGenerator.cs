@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using AuthorizationService.Entity;
 using AuthorizationService.Models;
 using AuthorizationService.Service.IService;
 using Microsoft.Extensions.Options;
@@ -40,7 +39,6 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         // secret = GenerateSecureSecret();
 
         //byte[] key = Encoding.ASCII.GetBytes(secret);
-
 
         var claimList = new List<Claim>
             {

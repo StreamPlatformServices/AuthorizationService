@@ -18,21 +18,32 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto model)
     {
-        var loginResponse = await _authService.Login(model);
-        if (loginResponse == null)
+
+        try
+        {
+            var loginResponse = await _authService.Login(model);
+            if (loginResponse == null)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Nieprawidłowe dane logowania lub nieaktywne konto.";
+                return BadRequest(_response);
+            }
+            _response.Result = loginResponse;
+
+            return Ok(_response);
+        }
+        catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = "Nieprawidłowe dane logowania lub nieaktywne konto.";
-            return BadRequest(_response);
+            _response.Message = "Wystąpił błąd podczas logowania.";
+            return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
-        _response.Result = loginResponse;
-
-        return Ok(_response);
     }
 
     [HttpGet("publickey")]
     public IActionResult GetTokenPublicKey()
     {
+
         var jwtPublicKey = _authService.GetPublicKey();
         if (string.IsNullOrEmpty(jwtPublicKey))
         {

@@ -1,4 +1,4 @@
-using AuthorizationService.Entity;
+using AuthorizationService.Models;
 using AuthorizationService.Models.Dto;
 using AuthorizationService.Service.IService;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +21,17 @@ namespace AuthorizationService.Service
         {
             var user = _userManager.Users.FirstOrDefault(u => u.NormalizedEmail == loginRequestDto.Email.ToUpper());
 
-            bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+            bool isValid;
+
+            try
+            {
+                isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
 
             if (user == null || isValid == false || !user.IsActive)
             {

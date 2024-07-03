@@ -1,6 +1,5 @@
 using System.Data;
 using System.Security.Claims;
-using AuthorizationService.Entity;
 using AuthorizationService.Models;
 using AuthorizationService.Models.Dto;
 using AuthorizationService.Service.IService;
@@ -19,235 +18,299 @@ public class UserService : IUserService
 
     public async Task<string> UpdateEndUser(BaseUpdateUserRequestDto updateDto, ClaimsPrincipal userPrincipal)
     {
-        var user = await validateUser(userPrincipal);
-
-        if (user == null)
+        try
         {
-            return "Użytkownik nie został znaleziony.";
+
+            var user = await validateUser(userPrincipal);
+
+            if (user == null)
+            {
+                return "Użytkownik nie został znaleziony.";
+            }
+
+            var errorMessage = await updateBaseUserData(updateDto, user);
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                return errorMessage;
+            }
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return result.Succeeded ? "" : "Nie udało się zaktualizować użytkownika.";
+        }
+        catch (Exception ex)
+        {
+            throw;
         }
 
-        var errorMessage = await updateBaseUserData(updateDto, user);
-
-        if (!string.IsNullOrEmpty(errorMessage))
-        {
-            return errorMessage;
-        }
-
-        var result = await _userManager.UpdateAsync(user);
-
-        return result.Succeeded ? "" : "Nie udało się zaktualizować użytkownika.";
     }
 
     public async Task<string> UpdateContentCreator(UpdateContentCreatorRequestDto updateDto, ClaimsPrincipal userPrincipal)
     {
 
-        var user = await validateUser(userPrincipal);
-
-        if (user == null)
+        try
         {
-            return "Użytkownik nie został znaleziony.";
+            var user = await validateUser(userPrincipal);
+
+            if (user == null)
+            {
+                return "Użytkownik nie został znaleziony.";
+            }
+
+            var errorMessage = await updateBaseUserData(updateDto, user);
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                return errorMessage;
+            }
+
+            if (updateDto.NIP != null)
+            {
+                user.NIP = updateDto.NIP;
+            }
+
+            if (updateDto.PhoneNumber != null)
+            {
+                user.PhoneNumber = updateDto.PhoneNumber;
+            }
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return result.Succeeded ? "" : "Nie udało się zaktuazliować użytkownika o roli Content Creator.";
         }
-
-        var errorMessage = await updateBaseUserData(updateDto, user);
-
-        if (!string.IsNullOrEmpty(errorMessage))
+        catch (Exception ex)
         {
-            return errorMessage;
+            throw;
         }
-
-        if (updateDto.NIP != null)
-        {
-            user.NIP = updateDto.NIP;
-        }
-
-        if (updateDto.PhoneNumber != null)
-        {
-            user.PhoneNumber = updateDto.PhoneNumber;
-        }
-
-        var result = await _userManager.UpdateAsync(user);
-
-        return result.Succeeded ? "" : "Nie udało się zaktuazliować użytkownika o roli Content Creator.";
     }
 
     public async Task<string> UpdateAdmin(BaseUpdateUserRequestDto updateDto, ClaimsPrincipal userPrincipal)
     {
-        var user = await validateUser(userPrincipal);
-
-        if (user == null)
+        try
         {
-            return "Użytkownik nie został znaleziony.";
+            var user = await validateUser(userPrincipal);
+
+            if (user == null)
+            {
+                return "Użytkownik nie został znaleziony.";
+            }
+
+            var errorMessage = await updateBaseUserData(updateDto, user);
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                return errorMessage;
+            }
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return result.Succeeded ? "" : "Nie udało się zaktualizować użytkownika.";
         }
-
-        var errorMessage = await updateBaseUserData(updateDto, user);
-
-        if (!string.IsNullOrEmpty(errorMessage))
+        catch (Exception ex)
         {
-            return errorMessage;
+            throw;
         }
-
-        var result = await _userManager.UpdateAsync(user);
-
-        return result.Succeeded ? "" : "Nie udało się zaktualizować użytkownika.";
     }
 
     public async Task<UsersResponseDto> GetUsers()
     {
-        var users = await _userManager.Users
-            .Select(user => new UserDto
-            {
-                Id = user.Id,
-                Email = user.Email,
-                UserName = user.UserName,
-                PhoneNumber = user.PhoneNumber,
-                IsActive = user.IsActive,
-                Role = user.Role
-            }).ToListAsync();
-
-        return new UsersResponseDto
+        try
         {
-            Users = users
-        }; ;
+            var users = await _userManager.Users
+                .Select(user => new UserDto
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    PhoneNumber = user.PhoneNumber,
+                    IsActive = user.IsActive,
+                    Role = user.Role
+                }).ToListAsync();
+
+            return new UsersResponseDto
+            {
+                Users = users
+            };
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     public async Task<UserResponseDto> GetUser(ClaimsPrincipal userPrincipal)
     {
-        var user = await validateUser(userPrincipal);
-
-        if (user == null)
+        try
         {
-            return null;
+            var user = await validateUser(userPrincipal);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return new UserResponseDto
+            {
+                Email = user.Email,
+                UserName = user.UserName,
+                Role = user.Role,
+                NIP = user.NIP,
+                PhoneNumber = user.PhoneNumber,
+            };
         }
-
-        return new UserResponseDto
+        catch (Exception ex)
         {
-            Email = user.Email,
-            UserName = user.UserName,
-            Role = user.Role,
-            NIP = user.NIP,
-            PhoneNumber = user.PhoneNumber,
-        };
+            throw;
+        }
     }
 
     public async Task<string> RemoveUser(string password, ClaimsPrincipal userPrincipal)
     {
-        var user = await validateUser(userPrincipal);
-
-        if (user == null)
+        try
         {
-            return null;
+            var user = await validateUser(userPrincipal);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var isCorrectPassword = await _userManager.CheckPasswordAsync(user, password);
+
+            if (!isCorrectPassword)
+            {
+                return "Nieprawidłowe hasło.";
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                return "";
+            }
+
+            return "Nie udało się usunąć użytkownika.";
         }
-
-        var isCorrectPassword = await _userManager.CheckPasswordAsync(user, password);
-
-        if (!isCorrectPassword)
+        catch (Exception ex)
         {
-            return "Nieprawidłowe hasło.";
+            throw;
         }
-
-        var result = await _userManager.DeleteAsync(user);
-
-        if (result.Succeeded)
-        {
-            return "";
-        }
-
-        return "Nie udało się usunąć użytkownika.";
     }
 
     public async Task<string> UpdateStatus(UpdateUserStatusRequestDto userStatus, string username)
     {
-        var user = await _userManager.FindByNameAsync(username);
-
-        if (user == null)
+        try
         {
-            return "Użytkownik nie został znaleziony.";
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+            {
+                return "Użytkownik nie został znaleziony.";
+            }
+
+            user.IsActive = userStatus.isActive;
+
+            await _userManager.UpdateAsync(user);
+
+            return "";
         }
-
-        user.IsActive = userStatus.isActive;
-
-        await _userManager.UpdateAsync(user);
-
-        return "";
+        catch (Exception ex)
+        {
+            throw;
+        }
 
     }
 
     private async Task<string> updateBaseUserData(BaseUpdateUserRequestDto updateDto, AppUser user)
     {
-
-        if (!string.IsNullOrEmpty(updateDto.Email))
+        try
         {
-            var userWithEmail = await _userManager.FindByEmailAsync(updateDto.Email);
-
-            if (userWithEmail != null && userWithEmail.Id != user.Id)
+            if (!string.IsNullOrEmpty(updateDto.Email))
             {
-                return "Nieprawidłowy e-mail.";
+                var userWithEmail = await _userManager.FindByEmailAsync(updateDto.Email);
+
+                if (userWithEmail != null && userWithEmail.Id != user.Id)
+                {
+                    return "Nieprawidłowy e-mail.";
+                }
+
+                user.Email = updateDto.Email;
             }
 
-            user.Email = updateDto.Email;
-        }
+            if (!string.IsNullOrEmpty(updateDto.UserName))
+            {
+                var userWithUserName = await _userManager.FindByNameAsync(updateDto.UserName);
 
-        if (!string.IsNullOrEmpty(updateDto.UserName))
+                if (userWithUserName != null && userWithUserName.Id != user.Id)
+                {
+                    return "Nieprawidłowa nazwa użytkownika.";
+                }
+
+                user.UserName = updateDto.UserName;
+            }
+
+            if (!string.IsNullOrEmpty(updateDto.Password))
+            {
+                var removePasswordResult = await _userManager.RemovePasswordAsync(user);
+                if (!removePasswordResult.Succeeded)
+                {
+                    return "Usunięcie hasła nie powiodło się.";
+                }
+
+                var addPasswordResult = await _userManager.AddPasswordAsync(user, updateDto.Password);
+                if (!addPasswordResult.Succeeded)
+                {
+                    return "Dodanie nowego hasła nie powiodło się.";
+                }
+            }
+            return "";
+        }
+        catch (Exception ex)
         {
-            var userWithUserName = await _userManager.FindByNameAsync(updateDto.UserName);
-
-            if (userWithUserName != null && userWithUserName.Id != user.Id)
-            {
-                return "Nieprawidłowa nazwa użytkownika.";
-            }
-
-            user.UserName = updateDto.UserName;
+            throw;
         }
-
-        if (!string.IsNullOrEmpty(updateDto.Password))
-        {
-            var removePasswordResult = await _userManager.RemovePasswordAsync(user);
-            if (!removePasswordResult.Succeeded)
-            {
-                return "Usunięcie hasła nie powiodło się.";
-            }
-
-            var addPasswordResult = await _userManager.AddPasswordAsync(user, updateDto.Password);
-            if (!addPasswordResult.Succeeded)
-            {
-                return "Dodanie nowego hasła nie powiodło się.";
-            }
-        }
-        return "";
     }
 
     private async Task<AppUser> validateUser(ClaimsPrincipal userPrincipal)
     {
-        var userIdClaim = userPrincipal.FindFirst(ClaimTypes.NameIdentifier);
-
-        if (userIdClaim == null)
+        try
         {
-            throw new Exception("Nieprawidłowy token.");
+            var userIdClaim = userPrincipal.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+            {
+                throw new Exception("Nieprawidłowy token.");
+            }
+
+            var userId = userIdClaim.Value;
+
+            return await _userManager.FindByIdAsync(userId);
+        }
+        catch (Exception ex)
+        {
+            throw;
         }
 
-        var userId = userIdClaim.Value;
-
-        return await _userManager.FindByIdAsync(userId);
     }
 
     public async Task<string> RegisterEndUser(BaseRegistrationRequestDto registrationRequestDto)
     {
-
-        if (await IsUserExist(registrationRequestDto.Email))
-        {
-            return "Użytkownik już istnieje.";
-        }
-
-        AppUser user = new()
-        {
-            UserName = registrationRequestDto.UserName,
-            Email = registrationRequestDto.Email,
-            UserRoleEnum = UserRole.EndUser,
-            IsActive = true,
-        };
-
         try
         {
+            if (await IsUserExist(registrationRequestDto.Email))
+            {
+                return "Użytkownik już istnieje.";
+            }
+
+            AppUser user = new()
+            {
+                UserName = registrationRequestDto.UserName,
+                Email = registrationRequestDto.Email,
+                UserRoleEnum = UserRole.EndUser,
+                IsActive = true,
+            };
+
             var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
 
             return result.Succeeded ? "" : result.Errors.FirstOrDefault()?.Description;
@@ -261,24 +324,22 @@ public class UserService : IUserService
 
     public async Task<string> RegisterContentCreator(RegistrationContentCreatorRequestDto registrationRequestDto)
     {
-
-        if (await IsUserExist(registrationRequestDto.Email))
-        {
-            return "Użytkownik już istnieje.";
-        }
-
-        AppUser user = new()
-        {
-            UserName = registrationRequestDto.UserName,
-            Email = registrationRequestDto.Email,
-            NIP = registrationRequestDto.NIP,
-            PhoneNumber = registrationRequestDto.PhoneNumber,
-            UserRoleEnum = UserRole.ContentCreator,
-            IsActive = false,
-        };
-
         try
         {
+            if (await IsUserExist(registrationRequestDto.Email))
+            {
+                return "Użytkownik już istnieje.";
+            }
+
+            AppUser user = new()
+            {
+                UserName = registrationRequestDto.UserName,
+                Email = registrationRequestDto.Email,
+                NIP = registrationRequestDto.NIP,
+                PhoneNumber = registrationRequestDto.PhoneNumber,
+                UserRoleEnum = UserRole.ContentCreator,
+                IsActive = false,
+            };
             var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
 
             return result.Succeeded ? "" : result.Errors.FirstOrDefault()?.Description;
@@ -294,22 +355,21 @@ public class UserService : IUserService
     [Authorize]
     public async Task<string> RegisterAdminUser(BaseRegistrationRequestDto registrationRequestDto)
     {
-
-        if (await IsUserExist(registrationRequestDto.Email))
-        {
-            return "Użytkownik już istnieje.";
-        }
-
-        AppUser user = new()
-        {
-            UserName = registrationRequestDto.UserName,
-            Email = registrationRequestDto.Email,
-            UserRoleEnum = UserRole.Admin,
-            IsActive = true,
-        };
-
         try
         {
+            if (await IsUserExist(registrationRequestDto.Email))
+            {
+                return "Użytkownik już istnieje.";
+            }
+
+            AppUser user = new()
+            {
+                UserName = registrationRequestDto.UserName,
+                Email = registrationRequestDto.Email,
+                UserRoleEnum = UserRole.Admin,
+                IsActive = true,
+            };
+
             var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
 
             return result.Succeeded ? "" : result.Errors.FirstOrDefault()?.Description;
@@ -323,9 +383,16 @@ public class UserService : IUserService
 
     private async Task<bool> IsUserExist(string Email)
     {
-        var normalizedEmail = Email.ToUpper();
-        return await _userManager.Users
-            .AsNoTracking()
-            .AnyAsync(u => u.NormalizedEmail == normalizedEmail);
+        try
+        {
+            var normalizedEmail = Email.ToUpper();
+            return await _userManager.Users
+                .AsNoTracking()
+                .AnyAsync(u => u.NormalizedEmail == normalizedEmail);
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 }

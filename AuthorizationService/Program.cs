@@ -1,5 +1,4 @@
 using AuthorizationService.Data;
-using AuthorizationService.Entity;
 using AuthorizationService.Extensions;
 using AuthorizationService.Models;
 using AuthorizationService.Service;
