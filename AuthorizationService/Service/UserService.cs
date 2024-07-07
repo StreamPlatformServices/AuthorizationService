@@ -3,7 +3,6 @@ using System.Security.Claims;
 using AuthorizationService.Models;
 using AuthorizationService.Models.Dto;
 using AuthorizationService.Service.IService;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -291,7 +290,6 @@ public class UserService : IUserService
         {
             throw;
         }
-
     }
 
     public async Task<string> RegisterEndUser(BaseRegistrationRequestDto registrationRequestDto)
@@ -351,8 +349,40 @@ public class UserService : IUserService
         }
     }
 
-    [Authorize(Policy = "RequireAdminRole")]
-    [Authorize]
+    public async Task<string> ChangePassword(ChangePasswordRequestDto changePasswordRequest, ClaimsPrincipal userPrincipal)
+    {
+        try
+        {
+            var user = await validateUser(userPrincipal);
+
+            if (user == null)
+            {
+                return "Użytkownik nie został znaleziony.";
+            }
+
+            if (string.IsNullOrWhiteSpace(changePasswordRequest.OldPassword) || string.IsNullOrWhiteSpace(changePasswordRequest.NewPassword))
+            {
+                return "Wszystkie pola są wymagane.";
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword, changePasswordRequest.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return "";
+            }
+
+            return "Nie udało się zaktualizować hasła.";
+
+        }
+
+        catch (Exception ex)
+        {
+            // TODO: Read about throwing erros - should we throw ex.Message? Maybe we shouldn't be so verbose.
+            return $"Wystąpił błąd: {ex.Message}";
+        }
+    }
+
     public async Task<string> RegisterAdminUser(BaseRegistrationRequestDto registrationRequestDto)
     {
         try

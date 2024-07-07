@@ -178,6 +178,29 @@ public class UsersController : ControllerBase
         }
     }
 
+    [Authorize]
+    [HttpPatch("password")]
+    public async Task<IActionResult> ChangePasword([FromBody] ChangePasswordRequestDto passwordRequest)
+    {
+        try
+        {
+            var errorMessage = await _userService.ChangePassword(passwordRequest, User);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                _response.IsSuccess = false;
+                _response.Message = errorMessage;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _response.IsSuccess = false;
+            _response.Message = "Wystąpił błąd podczas zmiany hasła.";
+            return StatusCode(StatusCodes.Status500InternalServerError, _response);
+        }
+    }
+
     [Authorize(Policy = "RequireAdminRole")]
     [HttpPut("admin")]
     public async Task<IActionResult> UpdateAdmin([FromBody] BaseUpdateUserRequestDto user)
