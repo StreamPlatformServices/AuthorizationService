@@ -151,6 +151,7 @@ public class UserService : IUserService
 
             return new UserResponseDto
             {
+                Id = user.Id,
                 Email = user.Email,
                 UserName = user.UserName,
                 Role = user.Role,
