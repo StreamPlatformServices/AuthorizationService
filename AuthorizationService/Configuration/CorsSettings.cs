@@ -1,4 +1,4 @@
-namespace AuthorizationService.CommonConfiguration.ConfigurationModels;
+namespace AuthorizationService.Configuration;
 public class CorsSettings
 {
     public string[] AllowedHosts { get; set; }
