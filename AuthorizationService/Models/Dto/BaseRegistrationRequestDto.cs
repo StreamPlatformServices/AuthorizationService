@@ -4,7 +4,7 @@ namespace AuthorizationService.Models.Dto;
 public class BaseRegistrationRequestDto
 {
     [Required]
-    /*    [EmailAddress(ErrorMessage = "Nieprawidłowy adres e-mail.")]*/
+    [EmailAddress(ErrorMessage = "Nieprawidłowy adres e-mail.")]
     public string Email { get; set; }
 
     [Required]
