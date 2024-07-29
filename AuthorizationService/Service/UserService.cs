@@ -24,7 +24,7 @@ public class UserService : IUserService
 
             if (user == null)
             {
-                return "Użytkownik nie został znaleziony.";
+                return "User not found.";
             }
 
             var errorMessage = await updateBaseUserData(updateDto, user);
@@ -36,11 +36,11 @@ public class UserService : IUserService
 
             var result = await _userManager.UpdateAsync(user);
 
-            return result.Succeeded ? "" : "Nie udało się zaktualizować użytkownika.";
+            return result.Succeeded ? "" : "Failed to update user.";
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
 
     }
@@ -54,7 +54,7 @@ public class UserService : IUserService
 
             if (user == null)
             {
-                return "Użytkownik nie został znaleziony.";
+                return "User not found.";
             }
 
             var errorMessage = await updateBaseUserData(updateDto, user);
@@ -76,11 +76,11 @@ public class UserService : IUserService
 
             var result = await _userManager.UpdateAsync(user);
 
-            return result.Succeeded ? "" : "Nie udało się zaktuazliować użytkownika o roli Content Creator.";
+            return result.Succeeded ? "" : "Failed to update Content Creator.";
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 
@@ -92,7 +92,7 @@ public class UserService : IUserService
 
             if (user == null)
             {
-                return "Użytkownik nie został znaleziony.";
+                return "User not found.";
             }
 
             var errorMessage = await updateBaseUserData(updateDto, user);
@@ -104,11 +104,11 @@ public class UserService : IUserService
 
             var result = await _userManager.UpdateAsync(user);
 
-            return result.Succeeded ? "" : "Nie udało się zaktualizować użytkownika.";
+            return result.Succeeded ? "" : "Failed to update an Admin.";
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 
@@ -134,7 +134,7 @@ public class UserService : IUserService
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 
@@ -161,7 +161,7 @@ public class UserService : IUserService
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 
@@ -180,7 +180,7 @@ public class UserService : IUserService
 
             if (!isCorrectPassword)
             {
-                return "Nieprawidłowe hasło.";
+                return "Incorrect username or password.";
             }
 
             var result = await _userManager.DeleteAsync(user);
@@ -190,11 +190,11 @@ public class UserService : IUserService
                 return "";
             }
 
-            return "Nie udało się usunąć użytkownika.";
+            return "Failed to remove user.";
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 
@@ -206,7 +206,7 @@ public class UserService : IUserService
 
             if (user == null)
             {
-                return "Użytkownik nie został znaleziony.";
+                return "User not found.";
             }
 
             user.IsActive = userStatus.isActive;
@@ -217,7 +217,7 @@ public class UserService : IUserService
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
 
     }
@@ -232,7 +232,7 @@ public class UserService : IUserService
 
                 if (userWithEmail != null && userWithEmail.Id != user.Id)
                 {
-                    return "Nieprawidłowy e-mail.";
+                    return "Invalid e-mail.";
                 }
 
                 user.Email = updateDto.Email;
@@ -244,7 +244,7 @@ public class UserService : IUserService
 
                 if (userWithUserName != null && userWithUserName.Id != user.Id)
                 {
-                    return "Nieprawidłowa nazwa użytkownika.";
+                    return "Invalid username or password.";
                 }
 
                 user.UserName = updateDto.UserName;
@@ -255,20 +255,20 @@ public class UserService : IUserService
                 var removePasswordResult = await _userManager.RemovePasswordAsync(user);
                 if (!removePasswordResult.Succeeded)
                 {
-                    return "Usunięcie hasła nie powiodło się.";
+                    return "Failed to remove password.";
                 }
 
                 var addPasswordResult = await _userManager.AddPasswordAsync(user, updateDto.Password);
                 if (!addPasswordResult.Succeeded)
                 {
-                    return "Dodanie nowego hasła nie powiodło się.";
+                    return "Failed to add new password.";
                 }
             }
             return "";
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 
@@ -280,7 +280,7 @@ public class UserService : IUserService
 
             if (userIdClaim == null)
             {
-                throw new Exception("Nieprawidłowy token.");
+                throw new Exception("Invalid token.");
             }
 
             var userId = userIdClaim.Value;
@@ -289,7 +289,7 @@ public class UserService : IUserService
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 
@@ -299,7 +299,7 @@ public class UserService : IUserService
         {
             if (await IsUserExist(registrationRequestDto.Email))
             {
-                return "Użytkownik już istnieje.";
+                return "The user already exists.";
             }
 
             AppUser user = new()
@@ -317,7 +317,7 @@ public class UserService : IUserService
         }
         catch (Exception ex)
         {
-            return $"Wystąpił błąd: {ex.Message}";
+            return $"An error occured: {ex.Message}";
         }
     }
 
@@ -327,7 +327,7 @@ public class UserService : IUserService
         {
             if (await IsUserExist(registrationRequestDto.Email))
             {
-                return "Użytkownik już istnieje.";
+                return "The user already exists.";
             }
 
             AppUser user = new()
@@ -346,7 +346,7 @@ public class UserService : IUserService
         }
         catch (Exception ex)
         {
-            return $"Wystąpił błąd {ex.Message}";
+            return $"An error occured: {ex.Message}";
         }
     }
 
@@ -358,12 +358,12 @@ public class UserService : IUserService
 
             if (user == null)
             {
-                return "Użytkownik nie został znaleziony.";
+                return "User not found.";
             }
 
             if (string.IsNullOrWhiteSpace(changePasswordRequest.OldPassword) || string.IsNullOrWhiteSpace(changePasswordRequest.NewPassword))
             {
-                return "Wszystkie pola są wymagane.";
+                return "All fields are required.";
             }
 
             var result = await _userManager.ChangePasswordAsync(user, changePasswordRequest.OldPassword, changePasswordRequest.NewPassword);
@@ -373,14 +373,13 @@ public class UserService : IUserService
                 return "";
             }
 
-            return "Nie udało się zaktualizować hasła.";
+            return "Failed to update password.";
 
         }
 
         catch (Exception ex)
         {
-            // TODO: Read about throwing erros - should we throw ex.Message? Maybe we shouldn't be so verbose.
-            return $"Wystąpił błąd: {ex.Message}";
+            return $"An error occured: {ex.Message}";
         }
     }
 
@@ -390,7 +389,7 @@ public class UserService : IUserService
         {
             if (await IsUserExist(registrationRequestDto.Email))
             {
-                return "Użytkownik już istnieje.";
+                return "The user already exists.";
             }
 
             AppUser user = new()
@@ -408,7 +407,7 @@ public class UserService : IUserService
         }
         catch (Exception ex)
         {
-            return $"Wystąpił błąd: {ex.Message}";
+            return $"An error occured: {ex.Message}";
         }
     }
 
@@ -423,7 +422,7 @@ public class UserService : IUserService
         }
         catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
     }
 }

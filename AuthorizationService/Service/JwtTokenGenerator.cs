@@ -58,6 +58,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
+
         return tokenHandler.WriteToken(token);
     }
     public static RsaSecurityKey GetRsaSecurityKey()

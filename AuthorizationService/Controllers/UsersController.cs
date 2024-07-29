@@ -74,7 +74,7 @@ public class UsersController : ControllerBase
         if (usersResponse.Users == null)
         {
             _response.IsSuccess = false;
-            _response.Message = "Nie udało się pobrać użytkowników."; ;
+            _response.Message = "Failed to fetch users.";
             return BadRequest(_response);
         }
         _response.Result = usersResponse;
@@ -92,7 +92,7 @@ public class UsersController : ControllerBase
             if (userResponse == null)
             {
                 _response.IsSuccess = false;
-                _response.Message = "Nie udało się pobrać danych użytkownika.";
+                _response.Message = "Failed to retrieve user data.";
                 return BadRequest(_response);
             }
             _response.Result = userResponse;
@@ -102,7 +102,7 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = "Wystąpił błąd podczas pobierania danych użytkownika.";
+            _response.Message = $"An error occurred while retrieving user data. {ex.Message}";
             return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
     }
@@ -127,7 +127,7 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = "Wystąpił błąd podczas usuwania konta użytkownika.";
+            _response.Message = $"An error occurred while deleting the user account. {ex.Message}";
             return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
     }
@@ -150,7 +150,7 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = "Wystąpił błąd podczas aktualizacji danych użytkownika.";
+            _response.Message = $"An error occurred while updating user data. {ex.Message}";
             return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
     }
@@ -173,7 +173,7 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = "Wystąpił błąd podczas aktualizacji danych użytkownika.";
+            _response.Message = $"An error occurred while updating content creator data. {ex.Message}";
             return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
     }
@@ -196,7 +196,7 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = "Wystąpił błąd podczas zmiany hasła.";
+            _response.Message = $"An error occurred while changing the password. {ex.Message}";
             return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
     }
@@ -219,7 +219,7 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = "Wystąpił błąd podczas aktualizacji danych użytkownika.";
+            _response.Message = $"An error occurred while updating user admin data. {ex.Message}";
             return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
     }
@@ -242,7 +242,7 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = "Wystąpił błąd podczas aktualizacji statusu użytkownika.";
+            _response.Message = $"An error occurred while updating user status. {ex.Message}";
             return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
     }

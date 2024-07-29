@@ -25,7 +25,7 @@ public class AuthController : ControllerBase
             if (loginResponse == null)
             {
                 _response.IsSuccess = false;
-                _response.Message = "Nieprawidłowe dane logowania lub nieaktywne konto.";
+                _response.Message = "Incorrect login details or inactive account.";
                 return BadRequest(_response);
             }
             _response.Result = loginResponse;
@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
             _response.IsSuccess = false;
-            _response.Message = "Wystąpił błąd podczas logowania.";
+            _response.Message = $"An error occurred while logging in. {ex.Message}";
             return StatusCode(StatusCodes.Status500InternalServerError, _response);
         }
     }
