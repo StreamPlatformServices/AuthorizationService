@@ -27,7 +27,7 @@ public static class AuthenticationServiceExtensions
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
                     {
-                        return new[] { JwtTokenGenerator.GetRsaSecurityKey() };
+                        return new[] { JwtTokenGeneratorService.GetRsaSecurityKey() };
                     },
                     ValidateIssuer = true,
                     ValidIssuer = issuer,

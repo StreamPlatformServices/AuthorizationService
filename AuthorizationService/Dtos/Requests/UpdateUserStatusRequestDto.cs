@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AuthorizationService.Models.Dto;
+namespace AuthorizationService.Dto.Requests;
 public class UpdateUserStatusRequestDto
 {
     [Required]

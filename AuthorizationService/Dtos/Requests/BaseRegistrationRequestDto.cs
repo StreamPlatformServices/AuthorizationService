@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AuthorizationService.Models.Dto;
+namespace AuthorizationService.Dto.Requests;
 public class BaseRegistrationRequestDto
 {
     [Required]
@@ -10,6 +10,7 @@ public class BaseRegistrationRequestDto
     [Required]
     public string UserName { get; set; }
 
+    [MaxLength(64)]
     [Required]
     public string Password { get; set; }
 }

@@ -1,4 +1,4 @@
-namespace AuthorizationService.Models.Dto;
+namespace AuthorizationService.Dto.Responses;
 public class ResponseDto
 {
     public object? Result { get; set; }

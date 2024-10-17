@@ -1,5 +1,6 @@
 using System.Security.Claims;
-using AuthorizationService.Models.Dto;
+using AuthorizationService.Dto.Requests;
+using AuthorizationService.Dto.Responses;
 
 namespace AuthorizationService.Service.IService;
 public interface IUserService

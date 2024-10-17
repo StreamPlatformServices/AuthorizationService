@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AuthorizationService.Models.Dto;
+namespace AuthorizationService.Dto.Requests;
 public class UpdateContentCreatorRequestDto : BaseUpdateUserRequestDto
 {
     [RegularExpression(@"^\d{10}$", ErrorMessage = "Numer NIP musi mieć 10 cyfr.")]

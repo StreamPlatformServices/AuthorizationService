@@ -1,4 +1,4 @@
-namespace AuthorizationService.Models.Dto;
+namespace AuthorizationService.Dto.Responses;
 public class UserDto
 {
     public string Id { get; set; }

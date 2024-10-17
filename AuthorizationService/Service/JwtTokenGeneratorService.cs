@@ -7,11 +7,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AuthorizationService.Service;
-public class JwtTokenGenerator : IJwtTokenGenerator
+public class JwtTokenGeneratorService : IJwtTokenGenerator
 {
     private readonly JwtOptions _jwtOptions;
     private static RSA _rsa = RSA.Create();
-    public JwtTokenGenerator(IOptions<JwtOptions> jwtOptions)
+    public JwtTokenGeneratorService(IOptions<JwtOptions> jwtOptions)
     {
         _jwtOptions = jwtOptions.Value;
     }
@@ -29,17 +29,6 @@ public class JwtTokenGenerator : IJwtTokenGenerator
     public string GenerateToken(AppUser applicationUser, UserRole role)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-
-        string secret;
-
-        // For development
-        //secret = _jwtOptions.Secret;
-
-        // For production
-        // secret = GenerateSecureSecret();
-
-        //byte[] key = Encoding.ASCII.GetBytes(secret);
-
         var claimList = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub,applicationUser.Id),

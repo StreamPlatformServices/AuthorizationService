@@ -1,4 +1,5 @@
-using AuthorizationService.Models.Dto;
+using AuthorizationService.Dto.Requests;
+using AuthorizationService.Dto.Responses;
 using AuthorizationService.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

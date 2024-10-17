@@ -29,10 +29,14 @@ builder.Services
     .AddIdentityCore<AppUser>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
+builder.Services.Configure<PasswordHasherOptions>(options =>
+{
+    options.IterationCount = 600_000;
+});
 
 builder.Services.AddAuthenticationServices(jwtSettings);
 builder.Services.AddAuthorizationServices();
-builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGeneratorService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -62,7 +66,7 @@ var app = builder.Build();
 
 if (useSwagger)
 {
-    
+
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {

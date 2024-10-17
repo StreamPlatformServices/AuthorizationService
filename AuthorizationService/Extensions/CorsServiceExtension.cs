@@ -1,4 +1,4 @@
-namespace AuthorizationService.Extensions;
+/*namespace AuthorizationService.Extensions;
 public static class CorsServiceExtension
 {
     public static IServiceCollection AddCorsServices(this IServiceCollection services)
@@ -17,3 +17,4 @@ public static class CorsServiceExtension
         return services;
     }
 }
+*/
